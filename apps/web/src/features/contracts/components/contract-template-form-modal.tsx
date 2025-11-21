@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { supabase } from '@/lib/supabase-client'
-import type { ContractTemplate, ContractTemplateVariable, VariableOption } from '@/features/contracts/types'
-import { DEAL_VARIABLES, LEAD_VARIABLES } from '@/features/contracts/types'
+import type { ContractTemplate, ContractTemplateVariable, VariableOption } from '@/entities/contract/model'
+import { DEAL_VARIABLES, LEAD_VARIABLES } from '@/entities/contract/model'
 
 import styles from './contract-template-form-modal.module.css'
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import styles from './contract-tracking-filters.module.css'
 
-import type { ContractStatusFilter } from '@/features/contracts/hooks/use-contracts-tracking'
+import type { ContractStatusFilter } from '@/entities/contract/lib/use-contracts-tracking'
 
 const STATUS_OPTIONS: { label: string; value: ContractStatusFilter }[] = [
   { label: 'Todos', value: 'todos' },
