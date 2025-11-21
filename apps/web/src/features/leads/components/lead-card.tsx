@@ -1,6 +1,6 @@
 import styles from './lead-card.module.css'
 
-import type { LeadRecord } from '@/features/leads/types'
+import type { LeadRecord } from '@/entities/lead/model'
 
 type LeadCardProps = {
   lead: LeadRecord

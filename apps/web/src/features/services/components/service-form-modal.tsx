@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import type { ContractTemplateRecord, ServiceRecord } from '@/features/services/types'
-import { formatCurrency, parseCurrency } from '@/features/deals/utils/format'
+import { formatCurrency, parseCurrency } from '@/entities/deal/lib/format'
 
 import styles from './service-form-modal.module.css'
 

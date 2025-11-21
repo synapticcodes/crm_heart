@@ -1,7 +1,7 @@
 import { Draggable, Droppable } from '@hello-pangea/dnd'
 
 import { LeadCard } from '@/features/leads/components/lead-card'
-import type { LeadRecord, LeadStatus } from '@/features/leads/types'
+import type { LeadRecord, LeadStatus } from '@/entities/lead/model'
 
 import styles from './leads-column.module.css'
 

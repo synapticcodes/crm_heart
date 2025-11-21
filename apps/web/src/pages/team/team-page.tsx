@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { TeamInviteForm } from '@/features/team/components/team-invite-form'
 import { TeamMembersTable } from '@/features/team/components/team-members-table'
 import { TeamCredentialsModal } from '@/features/team/components/team-credentials-modal'
-import { useTeamManagement } from '@/features/team/hooks/use-team-management'
+import { useTeamManagement } from '@/widgets/team-management/model/use-team-management'
 
 import styles from './team-page.module.css'
 

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 
 import type { UserRole } from '@/features/auth/types'
-import type { TeamInviteResult } from '@/features/team/hooks/use-team-management'
+import type { TeamInviteResult } from '@/widgets/team-management/model/use-team-management'
 
 import styles from './team-invite-form.module.css'
 

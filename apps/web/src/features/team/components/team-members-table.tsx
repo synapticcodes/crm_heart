@@ -1,7 +1,7 @@
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-import type { TeamMember } from '@/features/team/types'
+import type { TeamMember } from '@/entities/member/model/types'
 
 import styles from './team-members-table.module.css'
 

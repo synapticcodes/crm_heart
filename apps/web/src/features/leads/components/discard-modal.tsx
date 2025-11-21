@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type KeyboardEvent, type MouseEvent } from 'react'
 
-import { DISCARD_REASONS, type DiscardReason, type LeadRecord } from '@/features/leads/types'
+import { DISCARD_REASONS, type DiscardReason, type LeadRecord } from '@/entities/lead/model'
 import { LEAD_DISCARD_DRAFT_PREFIX } from '@/features/leads/constants'
 
 import styles from './discard-modal.module.css'
