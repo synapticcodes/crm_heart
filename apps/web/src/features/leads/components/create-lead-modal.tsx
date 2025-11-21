@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { formatPhone } from '@/features/deals/utils/format'
+import { formatPhone } from '@/entities/deal/lib/format'
 
 import styles from './create-lead-modal.module.css'
 

@@ -1,6 +1,6 @@
 import styles from './contract-templates-table.module.css'
 
-import type { ContractTemplateWithVariables } from '@/features/contracts/types'
+import type { ContractTemplateWithVariables } from '@/entities/contract/model'
 
 const formatVariables = (variables: ContractTemplateWithVariables['variables']) =>
   variables.map((variable) => variable.variable_key).join(', ') || '—'

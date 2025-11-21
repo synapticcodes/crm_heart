@@ -1,7 +1,7 @@
 import styles from './contract-tracking-table.module.css'
 
-import type { ContractRecord } from '@/features/contracts/hooks/use-contracts-tracking'
-import { formatCPF } from '@/features/deals/utils/format'
+import type { ContractRecord } from '@/entities/contract/lib/use-contracts-tracking'
+import { formatCPF } from '@/entities/deal/lib/format'
 
 type Props = {
   contracts: ContractRecord[]

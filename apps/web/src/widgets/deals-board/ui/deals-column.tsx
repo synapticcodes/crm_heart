@@ -1,35 +1,33 @@
 import { Draggable, Droppable } from '@hello-pangea/dnd'
 
-import { LeadCard } from '@/features/leads/components/lead-card'
-import type { LeadRecord, LeadStatus } from '@/entities/lead/model'
+import { DealCard } from '@/entities/deal/ui/deal-card'
+import type { DealRecord, DealStatus } from '@/entities/deal/model'
 
-import styles from './leads-column.module.css'
+import styles from './deals-column.module.css'
 
-type LeadsColumnProps = {
-  droppableId: LeadStatus
+type DealsColumnProps = {
+  droppableId: DealStatus
   title: string
-  leads: LeadRecord[]
-  totalLeads: number
+  deals: DealRecord[]
+  totalDeals: number
   currentPage: number
   pageCount: number
   onPageChange: (page: number) => void
-  highlight?: string
-  onLeadClick?: (lead: LeadRecord) => void
-  onLeadContextMenu?: (lead: LeadRecord, position: { x: number; y: number }) => void
+  onCardClick?: (deal: DealRecord) => void
+  onDealContextMenu?: (deal: DealRecord, position: { x: number; y: number }) => void
 }
 
-export const LeadsColumn = ({
+export const DealsColumn = ({
   droppableId,
   title,
-  leads,
-  totalLeads,
+  deals,
+  totalDeals,
   currentPage,
   pageCount,
   onPageChange,
-  highlight,
-  onLeadClick,
-  onLeadContextMenu,
-}: LeadsColumnProps) => {
+  onCardClick,
+  onDealContextMenu,
+}: DealsColumnProps) => {
   const handlePageChange = (page: number) => {
     if (page === currentPage) return
     onPageChange(page)
@@ -39,7 +37,7 @@ export const LeadsColumn = ({
     <div className={styles.column}>
       <header className={styles.header}>
         <h2 className={styles.title}>{title}</h2>
-        <span className={styles.count}>{totalLeads}</span>
+        <span className={styles.count}>{totalDeals}</span>
       </header>
 
       <Droppable droppableId={droppableId}>
@@ -49,10 +47,10 @@ export const LeadsColumn = ({
             {...provided.droppableProps}
             className={[styles.list, snapshot.isDraggingOver ? styles.listDragging : ''].join(' ')}
           >
-            {leads.length === 0 ? <p className={styles.empty}>Nenhum lead aqui por enquanto.</p> : null}
+            {deals.length === 0 ? <p className={styles.empty}>Nenhum negócio aqui ainda.</p> : null}
 
-            {leads.map((lead, index) => (
-              <Draggable key={lead.id} draggableId={lead.id} index={index}>
+            {deals.map((deal, index) => (
+              <Draggable draggableId={deal.id} index={index} key={deal.id}>
                 {(draggableProvided, draggableSnapshot) => (
                   <div
                     ref={draggableProvided.innerRef}
@@ -61,10 +59,10 @@ export const LeadsColumn = ({
                     className={[styles.cardWrapper, draggableSnapshot.isDragging ? styles.cardDragging : ''].join(' ')}
                     onContextMenu={(event) => {
                       event.preventDefault()
-                      onLeadContextMenu?.(lead, { x: event.clientX, y: event.clientY })
+                      onDealContextMenu?.(deal, { x: event.clientX, y: event.clientY })
                     }}
                   >
-                    <LeadCard lead={lead} highlight={highlight} onClick={onLeadClick} />
+                    <DealCard deal={deal} onClick={onCardClick} />
                   </div>
                 )}
               </Draggable>
