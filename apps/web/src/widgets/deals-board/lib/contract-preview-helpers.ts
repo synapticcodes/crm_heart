@@ -4,14 +4,14 @@ const HIGHLIGHT_CLASS = 'crm-highlighted-value'
 const HIGHLIGHT_MISSING_CLASS = 'crm-highlighted-value crm-highlighted-value--missing'
 const MISSING_PLACEHOLDER = 'Não informado'
 
-import { format as formatDate, isValid, parseISO } from 'date-fns'
-import { ContractTemplateWithVariables } from '@/entities/contract/model'
-import { formatCurrency } from '@/entities/deal/lib/format'
+import { format as formatDate, isValid } from 'date-fns'
+import type { ContractTemplateWithVariables } from '@/entities/contract/model'
+import { formatCurrency, parseCurrency } from '@/entities/deal/lib/format'
 import { supabase } from '@/lib/supabase-client'
 import {
   fixFragmentedPlaceholdersInXml,
   replaceDocxPlaceholders,
-} from '@/features/deals/utils/docx-placeholders'
+} from '@/entities/deal/lib/docx-placeholders'
 
 export const normalizeVariableKey = (value: string | null | undefined) => {
   if (!value) return ''
@@ -85,7 +85,7 @@ export const applyHighlightsToHtml = (
   try {
     const highlightedByMarkers = new Set<string>()
     let markersReplaced = false
-    const initialHtml = html.replace(MARKER_REGEX, (match, encodedKey, markerContent) => {
+    const initialHtml = html.replace(MARKER_REGEX, (_match, encodedKey, markerContent) => {
       let key = String(encodedKey)
       try {
         key = decodeURIComponent(String(encodedKey))

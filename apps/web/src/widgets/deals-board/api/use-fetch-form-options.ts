@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { heartSupabase } from '@/lib/supabase-client'
 import { useCompany } from '@/app/providers/use-company'
-import { BRAZILIAN_STATES, ServiceRecord } from '@/entities/deal/model'
+import { BRAZILIAN_STATES, type ServiceRecord } from '@/entities/deal/model'
 
 export const useFetchFormOptions = (dealEstado: string | null | undefined) => {
   const [services, setServices] = useState<ServiceRecord[]>([])
@@ -43,26 +43,26 @@ export const useFetchFormOptions = (dealEstado: string | null | undefined) => {
     let active = true
     setIsLoadingCities(true)
 
-    heartSupabase
-      .from('cidades')
-      .select('nome')
-      .eq('estado', dealEstado)
-      .order('nome')
-      .then(({ data, error: fetchError }) => {
-        if (!active) return
-        if (fetchError) {
-          console.error('Failed to load cities', fetchError)
-          setCityOptions([])
-          return
-        }
+    const fetchCities = async () => {
+      const { data, error: fetchError } = await heartSupabase
+        .from('cidades')
+        .select('nome')
+        .eq('estado', dealEstado)
+        .order('nome')
+
+      if (!active) return
+
+      if (fetchError) {
+        console.error('Failed to load cities', fetchError)
+        setCityOptions([])
+      } else {
         const names = (data ?? []).map((city) => city.nome as string)
         setCityOptions(names)
-      })
-      .finally(() => {
-        if (active) {
-          setIsLoadingCities(false)
-        }
-      })
+      }
+      setIsLoadingCities(false)
+    }
+
+    void fetchCities()
 
     return () => {
       active = false

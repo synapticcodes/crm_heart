@@ -1,11 +1,11 @@
 import type { CSSProperties } from 'react'
 import { formatCPF, formatPhone } from '@/entities/deal/lib/format'
 import {
-  SignerFormEntry,
-  SignerDeliveryMethod,
+  type SignerFormEntry,
+  type SignerDeliveryMethod,
   DELIVERY_METHOD_OPTIONS,
-  ParticipantColor,
-  SignerRole
+  type ParticipantColor,
+  type SignerRole
 } from '@/widgets/deals-board/model/use-signature-logic'
 import styles from '../deal-drawer.module.css'
 
@@ -106,7 +106,7 @@ export const DesignerModal = ({
             {signers.map((signer) => {
               const meta = participantMetadata.get(signer.id)
               const displayLabel = meta?.displayLabel ?? 'Participante'
-              const colorVars: CSSProperties | undefined = meta?.color
+              const colorVars = meta?.color
                 ? {
                     '--participant-border': meta.color.border,
                     '--participant-background': meta.color.background,

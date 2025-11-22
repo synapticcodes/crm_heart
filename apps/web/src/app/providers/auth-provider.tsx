@@ -28,9 +28,9 @@ const parseSchemaPriority = (): CompanySchema[] => {
 
   const parsed = value
     .split(',')
-    .map((item) => item.trim())
-    .filter((schema): schema is CompanySchema => schema === 'heart' || schema === 'core')
-    .filter((schema, index, self) => self.indexOf(schema) === index)
+    .map((item: string) => item.trim())
+    .filter((schema: string): schema is CompanySchema => schema === 'heart' || schema === 'core')
+    .filter((schema: CompanySchema, index: number, self: CompanySchema[]) => self.indexOf(schema) === index)
 
   return parsed.length > 0 ? parsed : fallback
 }

@@ -1,6 +1,6 @@
 import styles from '../deal-drawer.module.css'
 import { FileUploadField } from '@/shared/ui/file-upload/file-upload-field'
-import { DealRecord } from '@/entities/deal/model'
+import type { DealRecord } from '@/entities/deal/model'
 
 type DocumentsInfoProps = {
   dealId: string

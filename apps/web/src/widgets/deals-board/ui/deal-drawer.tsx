@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useToast } from '@/app/providers/toast-provider'
-import { DealRecord } from '@/entities/deal/model'
+import type { DealRecord } from '@/entities/deal/model'
 import { DEAL_DRAFT_STORAGE_PREFIX } from '@/features/deals/constants'
 import { heartSupabase, supabase } from '@/lib/supabase-client'
 
@@ -14,7 +14,7 @@ import { FinancialInfo } from '@/widgets/deals-board/ui/form-sections/financial-
 import { DocumentsInfo } from '@/widgets/deals-board/ui/form-sections/documents-info'
 import { DesignerModal } from '@/widgets/deals-board/ui/signature-designer/designer-modal'
 
-import { normalizeVariableKey, convertPreviewToHtml } from '@/widgets/deals-board/lib/contract-preview-helpers'
+import { convertPreviewToHtml } from '@/widgets/deals-board/lib/contract-preview-helpers'
 
 import styles from './deal-drawer.module.css'
 
@@ -26,9 +26,6 @@ type DealDrawerProps = {
   onClose: () => void
   onSave: (payload: Partial<DealRecord> & { id: string }) => Promise<void>
 }
-
-const DEFAULT_PAGE_WIDTH = 793
-const DEFAULT_PAGE_HEIGHT = 1123
 
 export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => {
   const toast = useToast()
@@ -54,7 +51,7 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
   }, [deal])
 
   // --- Logic Hooks ---
-  const { services, cityOptions, isLoadingCities } = useFetchFormOptions(deal?.deal_estado) // Using deal state is tricky, need form state
+  // Using deal state is tricky, need form state
   // Actually fetch options depend on form state, but hook needs to be inside.
   // Let's initialize logic hooks first.
 
@@ -66,7 +63,6 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
     setParcelValue,
     isSaving,
     error,
-    setError,
     handleChange,
     handleServiceChange,
     handleSubmit,
@@ -75,7 +71,7 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
   } = useDealFormLogic(deal, [], onSave, onClose) // Services passed empty initially, will fix below
 
   // Re-fetch services properly with hook
-  const { services: fetchedServices, cityOptions: fetchedCities, isLoadingCities: loadingCities } = useFetchFormOptions(form.deal_estado)
+  const { services: fetchedServices } = useFetchFormOptions(form.deal_estado)
 
   // 2. Contract Preview Logic
   const {
@@ -116,7 +112,6 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
     handleSignerChange,
     handleSignerCpfChange,
     handleSignerSelect,
-    participantCounts,
     participantMetadata,
     activeSigner
   } = useSignatureLogic(deal)
@@ -209,9 +204,9 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
   }
 
   // --- Designer Refs ---
-  const designerPreviewRef = useRef<HTMLDivElement>(null)
-  const designerDocumentWrapperRef = useRef<HTMLDivElement>(null)
-  const designerDocumentRef = useRef<HTMLDivElement>(null)
+  const designerPreviewRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>
+  const designerDocumentWrapperRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>
+  const designerDocumentRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>
 
   if (!open || !deal) return null
 

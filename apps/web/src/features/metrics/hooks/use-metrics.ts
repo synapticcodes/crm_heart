@@ -47,10 +47,11 @@ const defaultMetrics: MetricsData = {
 
 const countQuery = async (
   table: string,
-  filters: (builder: ReturnType<typeof supabase.from>) => ReturnType<typeof supabase.from>,
+  filters: (builder: any) => any,
 ) => {
-  const query = filters(supabase.from(table))
-  const { count, error } = await query.select('*', { head: true, count: 'exact' })
+  const query = supabase.from(table).select('*', { head: true, count: 'exact' })
+  const filtered = filters(query)
+  const { count, error } = await filtered
   if (error) {
     console.error(`Metrics count failed for ${table}`, error)
     return 0
