@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { SupabaseService } from '../../../common/supabase/supabase.service'
+import { SupabaseService } from '../../../../common/supabase/supabase.service'
 import { AutentiqueWebhookDto } from './dto/autentique-webhook.dto'
 
 const EVENT_STATUS_MAP: Record<string, { contractStatus?: string; dealStatus?: string }> = {

@@ -17,7 +17,7 @@ export class SignerService {
     this.autentiqueToken = this.configService.get('AUTENTIQUE_API_TOKEN') ?? 'autentique-token'
   }
 
-  async createEnvelope(payload: any) {
+  async createEnvelope(payload: Record<string, unknown>) {
     const { data } = await firstValueFrom(
       this.httpService.post(this.autentiqueUrl, payload, {
         headers: {

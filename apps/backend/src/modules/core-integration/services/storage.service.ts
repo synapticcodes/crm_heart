@@ -20,7 +20,7 @@ export class StorageService {
 
   async createSignedUploadUrl(path: string) {
     const storage = this.supabase.admin.storage.from(this.bucket)
-    const { data, error } = await storage.createSignedUploadUrl(path, this.uploadExpires)
+    const { data, error } = await storage.createSignedUploadUrl(path)
 
     if (error || !data?.token) {
       this.logger.error('Falha ao gerar URL assinada de upload', error)
