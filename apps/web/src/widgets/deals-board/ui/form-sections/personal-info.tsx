@@ -1,6 +1,6 @@
 import styles from '../deal-drawer.module.css'
 import { formatCPF, formatPhone, formatRG } from '@/entities/deal/lib/format'
-import { DealRecord } from '@/entities/deal/model'
+import type { DealRecord } from '@/entities/deal/model'
 
 type PersonalInfoProps = {
   form: Partial<DealRecord>

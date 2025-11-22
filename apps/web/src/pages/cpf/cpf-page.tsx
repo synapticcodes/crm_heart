@@ -1,6 +1,6 @@
-import { FormEvent, useEffect, useMemo, useState } from 'react'
+import { type FormEvent, useEffect, useMemo, useState } from 'react'
 
-import { InlineError } from '@/components/inline-error'
+import { InlineError } from '@/shared/ui/inline-error'
 import { useCpfConsultation } from '@/features/cpf/hooks/use-cpf-consultation'
 import { CpfResultModal } from '@/features/cpf/components/cpf-result-modal'
 

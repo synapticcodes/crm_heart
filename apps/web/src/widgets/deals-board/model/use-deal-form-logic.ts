@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { addMonths, format as formatDate, isValid, parseISO } from 'date-fns'
 import { useCompany } from '@/app/providers/use-company'
-import { DealRecord, ServiceRecord } from '@/entities/deal/model'
+import type { DealRecord, ServiceRecord } from '@/entities/deal/model'
 import { parseCurrency } from '@/entities/deal/lib/format'
 import { DEAL_DRAFT_STORAGE_PREFIX } from '@/features/deals/constants'
 

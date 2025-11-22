@@ -1,11 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
-import { supabase, heartSupabase } from '@/lib/supabase-client'
-import { ContractTemplateWithVariables } from '@/entities/contract/model'
-import { DealRecord } from '@/entities/deal/model'
+import { useCallback, useState } from 'react'
+import type { DealRecord } from '@/entities/deal/model'
 import { useContractTemplates } from '@/entities/contract/lib/use-contract-templates'
 import {
-  normalizeVariableKey,
-  resolveVariableValue,
   buildTemplatePlainString,
   applyHighlightsToHtml,
   resolveTemplateVariables,
@@ -15,7 +11,7 @@ import {
 } from '@/widgets/deals-board/lib/contract-preview-helpers'
 
 export const useContractPreviewLogic = (
-  deal: Partial<DealRecord> | null,
+  _deal: Partial<DealRecord> | null,
   form: Partial<DealRecord>,
   leadData: Record<string, unknown> | null
 ) => {

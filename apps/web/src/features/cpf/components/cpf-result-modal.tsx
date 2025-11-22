@@ -539,40 +539,40 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
     ),
   )
 
-  const scoreLabel = toString(
-    pickValue(
-      [
-        ['credit_score', 'classificacao'],
-        ['indicadores', 'score_credito', 'nivel'],
-        ['indicadores_risco', 'score_credito', 'nivel'],
-        ['score_credito', 'nivel'],
-        ['score_classificacao'],
-      ],
-      ['scorecreditonivel', 'classificacaoscore', 'scorestatus'],
-    ),
-  )
+  // const scoreLabel = toString(
+  //   pickValue(
+  //     [
+  //       ['credit_score', 'classificacao'],
+  //       ['indicadores', 'score_credito', 'nivel'],
+  //       ['indicadores_risco', 'score_credito', 'nivel'],
+  //       ['score_credito', 'nivel'],
+  //       ['score_classificacao'],
+  //     ],
+  //     ['scorecreditonivel', 'classificacaoscore', 'scorestatus'],
+  //   ),
+  // )
 
-  const offerStatus = toString(
-    pickValue(
-      [
-        ['oferta_credito', 'status'],
-        ['credit_offer', 'status'],
-        ['oferta_credito'],
-      ],
-      ['statusofertacredito', 'ofertacredito', 'creditofferstatus'],
-    ),
-  )
+  // const offerStatus = toString(
+  //   pickValue(
+  //     [
+  //       ['oferta_credito', 'status'],
+  //       ['credit_offer', 'status'],
+  //       ['oferta_credito'],
+  //     ],
+  //     ['statusofertacredito', 'ofertacredito', 'creditofferstatus'],
+  //   ),
+  // )
 
-  const offerLevel = toString(
-    pickValue(
-      [
-        ['oferta_credito', 'nivel'],
-        ['credit_offer', 'nivel'],
-        ['oferta_credito_nivel'],
-      ],
-      ['nivelofertacredito', 'ofertacreditonivel'],
-    ),
-  )
+  // const offerLevel = toString(
+  //   pickValue(
+  //     [
+  //       ['oferta_credito', 'nivel'],
+  //       ['credit_offer', 'nivel'],
+  //       ['oferta_credito_nivel'],
+  //     ],
+  //     ['nivelofertacredito', 'ofertacreditonivel'],
+  //   ),
+  // )
 
   const narrativeSource = toString(
     pickValue(
@@ -594,7 +594,7 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
     parseNumericString(pickValue([['csb8']])) ??
     96
 
-  const scoreLabelCandidate = 'BAIXÍSSIMO'
+  // const scoreLabelCandidate = 'BAIXÍSSIMO'
 
   const creditOfferStatusCandidate = toString(
     pickValue(
@@ -617,24 +617,24 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
         ['indicadores_risco', 'situacao_financeira', 'label'],
         ['situacao_financeira', 'label'],
         ['financial_situation', 'label'],
-        ['alertas', 0],
+        ['alertas', '0'],
       ],
       ['situacaofinanceira', 'situacao', 'statusfinanceiro'],
     ),
     narrativeAlerts[0]?.split('–')[0]?.trim() ?? 'Situação financeira não informada',
   )
 
-  const situationLevelCandidate =
-    toNumber(
-      pickValue(
-        [
-          ['indicadores_risco', 'situacao_financeira', 'nivel'],
-          ['situacao_financeira', 'nivel'],
-          ['financial_situation', 'level'],
-        ],
-        ['nivelcritico', 'nivelsituacao'],
-      ),
-    ) ?? 0
+  // const situationLevelCandidate =
+  //   toNumber(
+  //     pickValue(
+  //       [
+  //         ['indicadores_risco', 'situacao_financeira', 'nivel'],
+  //         ['situacao_financeira', 'nivel'],
+  //         ['financial_situation', 'level'],
+  //       ],
+  //       ['nivelcritico', 'nivelsituacao'],
+  //     ),
+  //   ) ?? 0
 
   const metricCandidates: RiskMetric[] = [
     {

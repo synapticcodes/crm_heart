@@ -34,7 +34,7 @@ const DEAL_STATUSES = [
   { label: 'Contrato rejeitado', value: 'contrato_rejeitado' },
 ]
 
-const MESSAGE_TYPES = [
+const MESSAGE_TYPES: { label: string; value: 'text' | 'audio' | 'image' }[] = [
   { label: 'Mensagem de texto', value: 'text' },
   { label: 'Áudio', value: 'audio' },
   { label: 'Imagem', value: 'image' },

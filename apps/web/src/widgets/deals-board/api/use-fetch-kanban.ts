@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react'
-import { formatInTimeZone } from 'date-fns-tz'
 import { heartSupabase } from '@/lib/supabase-client'
 import { useCompany } from '@/app/providers/use-company'
-import type { DealRecord, DealStatus } from '@/entities/deal/model'
+import type { DealRecord } from '@/entities/deal/model'
 
 export const useFetchKanban = () => {
   const [deals, setDeals] = useState<DealRecord[]>([])

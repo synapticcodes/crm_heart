@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR'
+import { ptBR } from 'date-fns/locale/pt-BR'
 
-import { MetricCard } from '@/components/metric-card'
+import { MetricCard } from '@/shared/ui/metric-card'
 import { useAuth } from '@/features/auth/hooks/use-auth'
 import { useMetrics } from '@/features/metrics/hooks/use-metrics'
 import { ADMIN_ROLES } from '@/features/auth/constants'

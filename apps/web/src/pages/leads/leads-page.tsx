@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { DragDropContext, type DropResult } from '@hello-pangea/dnd'
 
 import { useAuth } from '@/features/auth/hooks/use-auth'
-import { useLeadsKanban } from '@/features/leads/hooks/use-leads-kanban'
+import { useLeadsKanban } from '@/widgets/leads-table/model/use-leads-kanban'
 import { LeadFilters } from '@/features/leads/components/lead-filters'
 import { LeadsColumn } from '@/features/leads/components/leads-column'
 import { DiscardModal } from '@/features/leads/components/discard-modal'

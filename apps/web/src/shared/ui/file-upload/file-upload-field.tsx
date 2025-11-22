@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { supabase } from '@/lib/supabase-client'
-import { buildDealFilePath, extractFileExtension } from '@/features/deals/utils/deal-file-paths'
+import { buildDealFilePath, extractFileExtension } from '@/entities/deal/lib/deal-file-paths'
 
 import styles from './file-upload-field.module.css'
 

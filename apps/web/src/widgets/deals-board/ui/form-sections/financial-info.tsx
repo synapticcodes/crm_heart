@@ -1,6 +1,6 @@
 import styles from '../deal-drawer.module.css'
 import { formatCurrency, parseCurrency } from '@/entities/deal/lib/format'
-import { DealRecord, ServiceRecord } from '@/entities/deal/model'
+import type { DealRecord, ServiceRecord } from '@/entities/deal/model'
 
 type FinancialInfoProps = {
   form: Partial<DealRecord>

@@ -258,12 +258,12 @@ export const ActivityTracker = () => {
   useEffect(() => {
     if (activityTrackerGloballyDisabled) return
 
-    const handlePageHide = (event: PageTransitionEvent) => {
+    const handlePageHide = (event: PageTransitionEvent | BeforeUnloadEvent) => {
       if (activityTrackerGloballyDisabled || !accessTokenRef.current) {
         return
       }
 
-      const isPersisted = 'persisted' in event && event.persisted
+      const isPersisted = 'persisted' in event && (event as PageTransitionEvent).persisted
 
       void invokeActivity(
         'logout',

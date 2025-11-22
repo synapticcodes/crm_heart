@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { CSSProperties } from 'react'
-import { DealRecord } from '@/entities/deal/model'
-import { formatPhone, formatCPF } from '@/entities/deal/lib/format'
+import { useEffect, useMemo, useState } from 'react'
+import type { DealRecord } from '@/entities/deal/model'
 
 export type SignerDeliveryMethod = 'email' | 'whatsapp' | 'sms'
 export type SignerRole = 'SIGNER' | 'WITNESS'

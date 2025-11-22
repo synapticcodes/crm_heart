@@ -8,7 +8,7 @@ import { useTeamManagement } from '@/widgets/team-management/model/use-team-mana
 import styles from './team-page.module.css'
 
 export const TeamPage = () => {
-  const [credentialsModal, setCredentialsModal] = useState<{ email: string; password: string; role: string } | null>(
+  const [credentialsModal, setCredentialsModal] = useState<{ name: string; email: string; password: string; role: string } | null>(
     null,
   )
   const {
