@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { env } from '@/config/env'
 import { supabase } from '@/lib/supabase-client'
 import type { CpfConsultationPayload, CpfConsultationResult } from '@/features/cpf/types'
 
@@ -74,41 +75,91 @@ export const useCpfConsultation = () => {
     }
   }, [])
 
-  const consult = useCallback(async (payload: CpfConsultationPayload) => {
-    if (isMountedRef.current) {
-      setIsLoading(true)
-    }
-    setError(null)
-
-    const cpf = sanitizeCpf(payload.cpf)
-
-    const { data, error: fnError } = await supabase.functions.invoke<CpfConsultationResult>('cpf-consultation', {
-      body: { cpf },
-    })
-
-    if (fnError) {
-      console.error('Failed to execute CPF consultation', fnError)
-      setError(fnError.message ?? 'Não foi possível consultar o CPF. Tente novamente.')
+  const consult = useCallback(
+    async (payload: CpfConsultationPayload) => {
       if (isMountedRef.current) {
-        setIsLoading(false)
+        setIsLoading(true)
       }
-      return
-    }
+      setError(null)
 
-    if (data?.status === 'error') {
-      setError(data.message ?? 'Não foi possível consultar o CPF. Tente novamente.')
-      setResult(data)
-      if (isMountedRef.current) {
-        setIsLoading(false)
+      const cpf = sanitizeCpf(payload.cpf)
+      const apiBaseUrl = env.apiUrl?.trim()
+
+      if (!apiBaseUrl) {
+        setError('Backend API URL não configurada. Informe VITE_API_URL.')
+        if (isMountedRef.current) {
+          setIsLoading(false)
+        }
+        return
       }
-      return
-    }
 
-    setResult(data ?? null)
-    if (isMountedRef.current) {
-      setIsLoading(false)
-    }
-  }, [setError, setResult])
+      const token = await supabase.auth
+        .getSession()
+        .then(({ data }) => data.session?.access_token)
+        .catch(() => null)
+
+      if (!token) {
+        setError('Sessão expirada. Faça login novamente.')
+        if (isMountedRef.current) {
+          setIsLoading(false)
+        }
+        return
+      }
+
+      const endpoint = `${apiBaseUrl.replace(/\/$/, '')}/cpf/consult`
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ cpf }),
+        })
+
+        if (!response.ok) {
+          const payloadText = await response.text().catch(() => null)
+          const errorMessage = payloadText && payloadText.trim().length > 0 ? payloadText : null
+          setError(errorMessage ?? `Não foi possível consultar o CPF. Código ${response.status}.`)
+          if (isMountedRef.current) {
+            setIsLoading(false)
+          }
+          return
+        }
+
+        const data = (await response.json().catch(() => null)) as
+          | { success?: boolean; result?: CpfConsultationResult }
+          | CpfConsultationResult
+          | null
+        const result =
+          (data && 'result' in data ? (data.result as CpfConsultationResult | null) : (data as CpfConsultationResult | null)) ??
+          null
+
+        if (!result) {
+          setError('Resposta inválida do serviço de CPF.')
+          if (isMountedRef.current) {
+            setIsLoading(false)
+          }
+          return
+        }
+
+        if (result.status === 'error') {
+          setError(result.message ?? 'Não foi possível consultar o CPF. Tente novamente.')
+        }
+
+        setResult(result)
+      } catch (error) {
+        console.error('Failed to execute CPF consultation', error)
+        setError('Erro de rede ao consultar o CPF. Tente novamente.')
+      } finally {
+        if (isMountedRef.current) {
+          setIsLoading(false)
+        }
+      }
+    },
+    [setError, setResult],
+  )
 
   const reset = useCallback(() => {
     setResult(null)
