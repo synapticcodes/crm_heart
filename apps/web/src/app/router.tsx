@@ -2,7 +2,6 @@ import { Navigate, createBrowserRouter } from 'react-router-dom'
 
 import { ProtectedRoute } from '@/app/components/protected-route'
 import { AppLayout } from '@/app/layouts/app-layout'
-import { DashboardPage } from '@/pages/dashboard/dashboard-page'
 import { LeadsPage } from '@/pages/leads/leads-page'
 import { DealsPage } from '@/pages/deals/deals-page'
 import { ServicesPage } from '@/pages/services/services-page'
@@ -14,7 +13,7 @@ import { CpfPage } from '@/pages/cpf'
 import { LoginPage } from '@/pages/auth/login-page'
 import { ForbiddenPage } from '@/pages/auth/forbidden-page'
 import { AccessRevokedPage } from '@/pages/auth/access-revoked-page'
-import { ADMIN_ROLES } from '@/features/auth/constants'
+import { ADMIN_ROLES, METRICS_ROLES } from '@/features/auth/constants'
 
 export const router = createBrowserRouter([
   {
@@ -27,7 +26,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        element: <Navigate to="/leads" replace />,
       },
       {
         path: 'contracts/tracking',
@@ -72,7 +71,7 @@ export const router = createBrowserRouter([
       {
         path: 'metrics',
         element: (
-          <ProtectedRoute allowRoles={ADMIN_ROLES}>
+          <ProtectedRoute allowRoles={METRICS_ROLES}>
             <MetricsPage />
           </ProtectedRoute>
         ),
@@ -93,6 +92,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <Navigate to="/" replace />,
+    element: <Navigate to="/leads" replace />,
   },
 ])
