@@ -9,7 +9,7 @@ export const ForbiddenPage = () => {
         <h1 className={styles.title}>Acesso restrito</h1>
         <p className={styles.description}>
           Você não possui permissão para acessar este conteúdo. Caso acredite que isso seja um engano,
-          fale com um administrador do CRM Heart.
+          fale com um administrador do CRM Meu Nome Ok.
         </p>
         <Link to="/leads" className={styles.link}>
           Voltar para o início

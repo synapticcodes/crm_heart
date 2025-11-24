@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const now = new Date().toISOString()
       const message =
         detail?.message ??
-        'Seu acesso foi revogado. Caso acredite que isso seja um engano, fale com um administrador do CRM Heart.'
+        'Seu acesso foi revogado. Caso acredite que isso seja um engano, fale com um administrador do CRM Meu Nome Ok.'
 
       persistAccessRevokedInfo({
         message,

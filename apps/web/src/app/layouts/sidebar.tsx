@@ -41,8 +41,10 @@ export const Sidebar = () => {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.header}>
-        <span className={styles.brand}>CRM Heart</span>
-        <p className={styles.subtitle}>Gestão completa de relacionamento</p>
+        <div className={styles.brandRow}>
+          <img src="/logo.png" alt="CRM Meu Nome Ok" className={styles.brandLogo} />
+          <span className={styles.brand}>CRM Meu Nome Ok</span>
+        </div>
       </div>
 
       <nav className={styles.nav}>

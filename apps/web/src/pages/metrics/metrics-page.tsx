@@ -96,7 +96,7 @@ export const MetricsPage = () => {
         <div>
           <p className={styles.eyebrow}>{isAdmin ? 'Visão do time' : 'Visão pessoal'}</p>
           <h1>Métricas comerciais</h1>
-          <p>Consolidado de leads e deals com recortes por período e vendedor.</p>
+          <p>Relatório que mostra todos os leads, vendas concluídas e comissões.</p>
         </div>
         <div className={styles.headerActions}>
           <span>Atualizado {formattedUpdatedAt}</span>
