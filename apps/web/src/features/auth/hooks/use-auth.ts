@@ -61,7 +61,7 @@ export const useAuth = () => {
         if (isSessionBanned(sessionSnapshot)) {
           const metadata = getSessionBanMetadata(sessionSnapshot)
           const message =
-            'Seu acesso foi revogado pela administração do CRM Heart. Caso seja um engano, contate um administrador.'
+            'Seu acesso foi revogado pela administração do CRM Meu Nome Ok. Caso seja um engano, contate um administrador.'
 
           dispatchAccessRevokedEvent({
             reason: 'login_banned',

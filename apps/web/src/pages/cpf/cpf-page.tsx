@@ -132,7 +132,7 @@ export const CpfPage = () => {
     <section className={styles.section}>
       <header className={styles.header}>
         <h1>Consulta de CPF</h1>
-        <p>Verifique a situação financeira de um CPF integrado ao fluxo via n8n.</p>
+        <p>Verifique a situação financeira de um CPF.</p>
       </header>
 
       <form className={styles.form} onSubmit={handleSubmit}>

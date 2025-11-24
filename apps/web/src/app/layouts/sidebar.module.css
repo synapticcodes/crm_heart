@@ -13,6 +13,18 @@
   border-bottom: 1px solid var(--outline);
 }
 
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.brandLogo {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+}
+
 .brand {
   font-size: 1.1rem;
   font-weight: 600;

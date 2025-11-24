@@ -7,13 +7,13 @@ export const LoginPage = () => {
     <section className={styles.wrapper}>
       <div className={styles.card}>
         <header className={styles.header}>
-          <h1 className={styles.title}>CRM Heart</h1>
+          <img src="/logo.png" alt="CRM Meu Nome Ok" className={styles.logo} />
+          <h1 className={styles.title}>CRM Meu Nome Ok</h1>
           <p className={styles.subtitle}>Acesse sua conta para continuar.</p>
         </header>
 
         <div className={styles.formArea}>
           <LoginForm />
-          <p className={styles.formHelper}>Use as credenciais fornecidas pela equipe de TI.</p>
         </div>
       </div>
     </section>

@@ -14,16 +14,16 @@ export const Topbar = () => {
   }
 
   const userInitial = user?.email?.[0]?.toUpperCase() ?? '?'
+  const userDisplayName = profile?.user_name?.trim() || user?.email || 'Usuário'
   const userEmail = user?.email ?? 'Usuário não autenticado'
   const userRole = profile?.role ?? 'Definindo permissões'
 
   return (
     <header className={styles.topbar}>
       <div className={styles.heading}>
-        <h1 className={styles.headingTitle}>Bem-vindo(a) ao CRM Heart</h1>
-        <p className={styles.headingSubtitle}>
-          Organize leads, negócios e automações em um único lugar.
-        </p>
+        <h1 className={styles.headingTitle}>
+          Bem-vindo(a) {userDisplayName} ao CRM Meu Nome Ok
+        </h1>
       </div>
 
       <div className={styles.userCard}>

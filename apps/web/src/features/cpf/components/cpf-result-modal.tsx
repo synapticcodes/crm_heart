@@ -1084,7 +1084,7 @@ export const CpfResultModal = ({ result, onClose, onNewConsultation }: CpfResult
               </div>
               <div className={styles.logoStack}>
                 <div className={styles.logoPlaceholder}>
-                  <img src="/logo.png" alt="CRM Heart" />
+                  <img src="/logo.png" alt="CRM Meu Nome Ok" />
                 </div>
                 <span className={styles.complianceBadge}>🔒 LGPD &amp; Anti-Fraude</span>
               </div>
