@@ -18,13 +18,12 @@ export const AccessRevokedPage = () => {
     clearAccessRevokedInfo()
   }, [])
 
-  const primaryMessage =
-    info?.message ?? 'Seu acesso foi revogado. Caso acredite que isso seja um engano, fale com um administrador.'
+  const primaryMessage = info?.message ?? 'Por favor, tente novamente mais tarde.'
 
   return (
     <section className={styles.wrapper}>
       <div className={styles.card}>
-        <h1 className={styles.title}>Acesso revogado</h1>
+        <h1 className={styles.title}>Ocorreu um erro de autenticação</h1>
         <p className={styles.description}>{primaryMessage}</p>
         {info?.banReason ? <p className={styles.meta}>Motivo informado: {info.banReason}</p> : null}
         {info?.detail ? <p className={styles.meta}>Origem: {info.detail}</p> : null}

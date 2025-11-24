@@ -25,7 +25,7 @@ export const LoginForm = () => {
     const result = await signInWithPassword({ email, password })
 
     if (result.ok) {
-      navigate('/')
+      navigate('/leads', { replace: true })
       return
     }
 

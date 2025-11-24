@@ -2,7 +2,6 @@ import { Navigate, createBrowserRouter } from 'react-router-dom'
 
 import { ProtectedRoute } from '@/app/components/protected-route'
 import { AppLayout } from '@/app/layouts/app-layout'
-import { DashboardPage } from '@/pages/dashboard/dashboard-page'
 import { LeadsPage } from '@/pages/leads/leads-page'
 import { DealsPage } from '@/pages/deals/deals-page'
 import { ServicesPage } from '@/pages/services/services-page'
@@ -27,7 +26,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        element: <Navigate to="/leads" replace />,
       },
       {
         path: 'contracts/tracking',
@@ -93,6 +92,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <Navigate to="/" replace />,
+    element: <Navigate to="/leads" replace />,
   },
 ])

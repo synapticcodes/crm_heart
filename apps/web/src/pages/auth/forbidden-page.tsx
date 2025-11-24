@@ -11,7 +11,7 @@ export const ForbiddenPage = () => {
           Você não possui permissão para acessar este conteúdo. Caso acredite que isso seja um engano,
           fale com um administrador do CRM Heart.
         </p>
-        <Link to="/" className={styles.link}>
+        <Link to="/leads" className={styles.link}>
           Voltar para o início
         </Link>
       </div>
