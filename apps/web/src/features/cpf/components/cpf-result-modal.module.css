@@ -134,6 +134,18 @@
   gap: 1.5rem;
 }
 
+.rawPayload {
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 12px;
+  border-radius: 12px;
+  max-height: 320px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.45;
+  border: 1px solid rgba(15, 23, 42, 0.3);
+}
+
 .idLabel {
   display: flex;
   flex-direction: column;

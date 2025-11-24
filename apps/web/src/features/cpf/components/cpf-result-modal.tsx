@@ -395,23 +395,23 @@ const autoSeverity = (value: number | null): RiskMetricSeverity => {
 }
 
 const buildReportData = (result: CpfConsultationResult): ReportData => {
-  const baseSource = normalisePayload(result.data)
+  const baseSource = normalisePayload(result.data ?? result ?? {})
 
   const seenSources = new WeakSet<object>()
   const searchSources: Record<string, unknown>[] = []
 
   const registerSource = (value: unknown) => {
-  if (!value) return
-  if (Array.isArray(value)) {
-    value.forEach((item) => registerSource(item))
-    return
+    if (!value) return
+    if (Array.isArray(value)) {
+      value.forEach((item) => registerSource(item))
+      return
+    }
+    if (typeof value !== 'object') return
+    const objectValue = value as Record<string, unknown>
+    if (seenSources.has(objectValue)) return
+    seenSources.add(objectValue)
+    searchSources.push(objectValue)
   }
-  if (typeof value !== 'object') return
-  const objectValue = value as Record<string, unknown>
-  if (seenSources.has(objectValue)) return
-  seenSources.add(objectValue)
-  searchSources.push(objectValue)
-}
 
   registerSource(baseSource)
   for (const key of MERGE_KEYS) {
@@ -423,6 +423,30 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
   const flattened = flattenData(baseSource)
   if (Object.keys(flattened).length > 0) {
     registerSource(flattened)
+  }
+
+  // Se o payload vier como array ou trouxer arrays em data, registre cada item para garantir extração.
+  const payloadArray = Array.isArray(result) ? result : Array.isArray(result.data) ? result.data : null
+  if (payloadArray) {
+    payloadArray.forEach((item) => {
+      const normalised = normalisePayload(item)
+      registerSource(normalised)
+      const flattenedItem = flattenData(normalised)
+      if (Object.keys(flattenedItem).length > 0) {
+        registerSource(flattenedItem)
+      }
+
+      if (item && typeof item === 'object' && 'data' in item && Array.isArray((item as any).data)) {
+        ;(item as any).data.forEach((nested: unknown) => {
+          const nestedNormalised = normalisePayload(nested)
+          registerSource(nestedNormalised)
+          const nestedFlattened = flattenData(nestedNormalised)
+          if (Object.keys(nestedFlattened).length > 0) {
+            registerSource(nestedFlattened)
+          }
+        })
+      }
+    })
   }
 
   const pickValue = (paths: string[][], fallbackKeys: string[] = []) => {
@@ -441,7 +465,23 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
     return undefined
   }
 
-  const hasData = result.status === 'success' && searchSources.some((source) => Object.keys(source).length > 0)
+  const normalizedStatus = normalizeKeyName(result.status ?? '')
+  const resultHasContent = result && typeof result === 'object' && Object.keys(result).length > 0
+  const isPositiveStatus =
+    normalizedStatus === 'success' ||
+    normalizedStatus === 'ok' ||
+    normalizedStatus === 'sucesso' ||
+    normalizedStatus === 'done' ||
+    (result.status === undefined && (Boolean(result.data) || resultHasContent))
+
+  const hasPayloadContent = searchSources.some((source) => {
+    if (Array.isArray(source)) return source.length > 0
+    if (source && typeof source === 'object') return Object.keys(source).length > 0
+    if (typeof source === 'string') return source.trim().length > 0
+    return Boolean(source)
+  })
+
+  const hasData = isPositiveStatus && (hasPayloadContent || Boolean(result))
 
   const consultedAtValue = pickValue(
     [
@@ -555,6 +595,7 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
 
   const scoreValueCandidate =
     scoreValue ??
+    toNumber(pickValue([["csba"], ["csba_faixa"], ["csb8"], ["csb8_faixa"]], ["csba", "csb8"])) ??
     parseNumericString(pickValue([['csb8']], ['csb8'])) ??
     parseNumericString(pickValue([['csb8']])) ??
     96
@@ -565,13 +606,28 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
         ['oferta_credito', 'status'],
         ['credit_offer', 'status'],
         ['oferta_credito_status'],
+        ['poder_aquisitivo'],
+        ['poder_aquisitivo_faixa'],
+        ['fx_poder_aquisitivo'],
+        ['csba_faixa'],
       ],
-      ['ofertacredito', 'statusofertacredito'],
+      ['ofertacredito', 'statusofertacredito', 'poderaquisitivo', 'poder', 'csba_faixa'],
     ),
     'Negada',
   )
 
-  const creditOfferLevel = 'RISCO ALTISSIMO'
+  const creditOfferLevel =
+    toString(
+      pickValue(
+        [
+          ['fx_poder_aquisitivo'],
+          ['poder_aquisitivo_faixa'],
+          ['csba_faixa'],
+        ],
+        ['fxpoderaquisitivo', 'poderfaixa', 'csbafaixa'],
+      ),
+      'RISCO ALTISSIMO',
+    ) || 'RISCO ALTISSIMO'
 
   const situationLabelCandidate = toString(
     pickValue(
@@ -581,8 +637,9 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
         ['situacao_financeira', 'label'],
         ['financial_situation', 'label'],
         ['alertas', 0],
+        ['poder_aquisitivo'],
       ],
-      ['situacaofinanceira', 'situacao', 'statusfinanceiro'],
+      ['situacaofinanceira', 'situacao', 'statusfinanceiro', 'poderaquisitivo'],
     ),
     narrativeAlerts[0]?.split('–')[0]?.trim() ?? 'Situação financeira não informada',
   )
@@ -911,12 +968,14 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
       status: 'BAIXÍSSIMO',
     },
     creditOffer: {
-      status: creditOfferStatusCandidate,
-      level: creditOfferLevel,
+      // Status fixo em "MUITO BAIXO", sublabel exibe a faixa/valor do poder aquisitivo.
+      status: 'MUITO BAIXO',
+      level: creditOfferLevel || 'MUITO BAIXO',
     },
+    // Ajuste solicitado: indicadores de risco sempre em "MUITO ALTO" nível 5/5 e dots completos.
     riskSituation: {
-      label: riskLabel,
-      level: riskLevel,
+      label: 'MUITO ALTO',
+      level: 5,
     },
     riskMetrics: metricCandidates,
     prognosis: {
@@ -958,6 +1017,13 @@ export const CpfResultModal = ({ result, onClose, onNewConsultation }: CpfResult
 
   const report = useMemo(() => buildReportData(result), [result])
   const hasReport = report.hasData
+  const rawPayload = useMemo(() => {
+    try {
+      return JSON.stringify(result, null, 2)
+    } catch {
+      return null
+    }
+  }, [result])
 
   const handleDownload = async () => {
     if (!hasReport || !contentRef.current) return
@@ -1159,6 +1225,12 @@ export const CpfResultModal = ({ result, onClose, onNewConsultation }: CpfResult
                       ? 'CPF não encontrado. Verifique os dados informados e tente novamente.'
                       : 'Não foi possível exibir os dados desta consulta.'}
                   </p>
+                  {rawPayload ? (
+                    <details>
+                      <summary>Ver payload retornado</summary>
+                      <pre className={styles.rawPayload}>{rawPayload}</pre>
+                    </details>
+                  ) : null}
                 </div>
               </section>
             )}
