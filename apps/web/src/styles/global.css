@@ -1,21 +1,47 @@
 :root {
   color-scheme: light;
-  --background: #f4f6fb;
-  --background-offset: #eef1f8;
+
+  /* Core Colors - Slate & Indigo */
+  --background: #f8fafc; /* Slate 50 */
+  --background-offset: #f1f5f9; /* Slate 100 */
   --surface: #ffffff;
-  --foreground: #0f172a;
-  --muted: #dbe2f1;
-  --muted-foreground: #64748b;
-  --primary: #6366f1;
+  --foreground: #0f172a; /* Slate 900 */
+  
+  --muted: #e2e8f0; /* Slate 200 */
+  --muted-foreground: #64748b; /* Slate 500 */
+  
+  --primary: #4f46e5; /* Indigo 600 */
+  --primary-hover: #4338ca; /* Indigo 700 */
   --primary-foreground: #ffffff;
-  --outline: rgba(15, 23, 42, 0.14);
-  --shadow-sm: 0 6px 16px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 18px 45px rgba(15, 23, 42, 0.14);
+  
+  --secondary: #f1f5f9; /* Slate 100 */
+  --secondary-foreground: #0f172a; /* Slate 900 */
+
+  --destructive: #ef4444; /* Red 500 */
+  --destructive-foreground: #ffffff;
+
+  --success: #22c55e; /* Green 500 */
+  --warning: #eab308; /* Yellow 500 */
+
+  /* Borders & Shadows */
+  --border: #e2e8f0; /* Slate 200 */
+  --input: #e2e8f0;
+  --ring: #4f46e5; /* Indigo 600 */
+  --radius: 0.5rem;
+  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 * {
   box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: var(--border);
 }
 
 body {
@@ -24,6 +50,8 @@ body {
   color: var(--foreground);
   min-height: 100vh;
   font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -38,6 +66,30 @@ select {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
 #root {
   isolation: isolate;
+  height: 100%;
 }

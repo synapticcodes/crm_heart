@@ -3,50 +3,83 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--background);
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(#e2e8f0 1px, transparent 1px),
+    radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0, 12px 12px;
   padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.wrapper::before {
+  content: '';
+  position: absolute;
+  width: 140%;
+  height: 140%;
+  background: radial-gradient(circle at center, transparent 30%, #f8fafc 70%);
+  pointer-events: none;
 }
 
 .card {
-  width: min(420px, 100%);
-  border-radius: 1.25rem;
-  border: 1px solid var(--outline);
-  background: var(--surface);
-  box-shadow: var(--shadow-lg);
-  padding: 2.5rem;
+  position: relative;
+  z-index: 1;
+  width: min(440px, 100%);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 20px 40px -10px rgba(15, 23, 42, 0.1),
+    0 0 0 1px rgba(15, 23, 42, 0.05);
+  padding: 3rem;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 2rem;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .header {
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .logo {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
 
 .title {
-  font-size: 1.6rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.02em;
+  margin: 0;
 }
 
 .subtitle {
   font-size: 0.95rem;
   color: var(--muted-foreground);
+  margin: 0;
 }
 
 .formArea {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 1.5rem;
 }
 
 .formHelper {

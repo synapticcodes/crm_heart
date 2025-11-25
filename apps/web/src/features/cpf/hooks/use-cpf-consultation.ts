@@ -132,9 +132,13 @@ export const useCpfConsultation = () => {
           | { success?: boolean; result?: CpfConsultationResult }
           | CpfConsultationResult
           | null
-        const result =
-          (data && 'result' in data ? (data.result as CpfConsultationResult | null) : (data as CpfConsultationResult | null)) ??
-          null
+
+        const isObjectLike = (value: unknown): value is Record<string, unknown> =>
+          value !== null && typeof value === 'object'
+
+        const result = isObjectLike(data)
+          ? ((('result' in data ? (data as Record<string, unknown>).result : data) as CpfConsultationResult | null) ?? null)
+          : null
 
         if (!result) {
           setError('Resposta inválida do serviço de CPF.')

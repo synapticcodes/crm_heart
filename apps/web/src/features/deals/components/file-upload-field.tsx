@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Upload } from 'lucide-react'
 
 import { supabase } from '@/lib/supabase-client'
 import { buildDealFilePath, extractFileExtension } from '@/features/deals/utils/deal-file-paths'
@@ -100,11 +101,23 @@ export const FileUploadField = ({
 
   return (
     <div className={styles.container}>
-      <label className={styles.label}>{label}</label>
-      <div className={styles.controls}>
-        <input type="file" accept={accept} onChange={handleFileUpload} disabled={isUploading} />
-        {isUploading ? <span className={styles.status}>Enviando...</span> : null}
-      </div>
+      <span className={styles.label}>{label}</span>
+      
+      {!fieldValue ? (
+        <div className={styles.controls}>
+          <label className={`${styles.uploadButton} ${isUploading ? styles.uploadButtonDisabled : ''}`}>
+            <Upload size={16} />
+            {isUploading ? 'Enviando...' : 'Escolher arquivo'}
+            <input 
+              type="file" 
+              accept={accept} 
+              onChange={handleFileUpload} 
+              disabled={isUploading}
+              className={styles.hiddenInput}
+            />
+          </label>
+        </div>
+      ) : null}
 
       {error ? <p className={styles.error}>{error}</p> : null}
 

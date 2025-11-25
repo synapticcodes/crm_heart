@@ -7,6 +7,14 @@ import { SupabaseService } from '../../common/supabase/supabase.service'
 import { ProfileService } from '../profile/profile.service'
 import { ConsultCpfDto } from './dto/consult-cpf.dto'
 
+type CpfConsultationStatus = 'success' | 'not_found' | 'error'
+
+type CpfConsultationResult = {
+  status: CpfConsultationStatus
+  data: unknown
+  message?: string | null
+}
+
 @Injectable()
 export class CpfService {
   private readonly logger = new Logger(CpfService.name)
@@ -53,7 +61,7 @@ export class CpfService {
         if (fetchError) {
           this.logger.warn('Falha ao buscar cache de consulta de CPF', fetchError as Error)
         } else if (existing?.payload) {
-          return existing.payload
+          return this.normalizeResult(existing.payload, existing.status ?? undefined)
         }
       }
     } catch (error) {
@@ -79,16 +87,13 @@ export class CpfService {
       payload = { status: 'error', message: 'Não foi possível consultar o CPF no momento.' }
     }
 
+    const normalizedResult = this.normalizeResult(payload)
+
     // Persistência do log de consulta
     try {
       if (!profile?.company_id) {
         this.logger.warn(`Não foi possível registrar log de CPF: company_id ausente para user ${user.id}`)
       } else {
-        const status =
-          payload && typeof payload === 'object' && 'status' in payload && typeof (payload as any).status === 'string'
-            ? (payload as any).status
-            : 'success'
-
         await this.supabase
           .schema('heart')
           .from('cpf_consultas')
@@ -97,14 +102,41 @@ export class CpfService {
             user_id: user.id,
             user_nome: profile.user_name ?? user.email ?? 'Usuário',
             cpf: sanitizedCpf || dto.cpf,
-            payload,
-            status,
+            payload: normalizedResult,
+            status: normalizedResult.status,
           })
       }
     } catch (error) {
       this.logger.error('Falha ao registrar log de consulta de CPF', error as Error)
     }
 
-    return payload
+    return normalizedResult
+  }
+
+  private normalizeResult(payload: unknown, statusHint?: string): CpfConsultationResult {
+    const payloadObject = payload && typeof payload === 'object' ? (payload as Record<string, unknown>) : null
+
+    const statusFromPayload =
+      payloadObject && typeof payloadObject.status === 'string'
+        ? payloadObject.status
+        : undefined
+
+    const message =
+      payloadObject && typeof payloadObject.message === 'string'
+        ? payloadObject.message
+        : null
+
+    const data =
+      payloadObject && 'data' in payloadObject && payloadObject.data !== undefined
+        ? payloadObject.data
+        : payload
+
+    const status = (statusFromPayload ?? statusHint ?? 'success') as CpfConsultationStatus
+
+    return {
+      status,
+      data: data ?? null,
+      message,
+    }
   }
 }

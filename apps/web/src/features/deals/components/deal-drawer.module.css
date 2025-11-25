@@ -42,7 +42,12 @@
   background: transparent;
   font-weight: 600;
   cursor: pointer;
-  color: var(--muted-foreground);
+  color: var(--destructive);
+  transition: color 0.2s ease;
+}
+
+.closeButton:hover {
+  color: #b91c1c;
 }
 
 .form {
@@ -130,13 +135,8 @@
   line-height: 1.4;
 }
 
-.contractCallout,
-.contractPreview {
+.contractCallout {
   grid-column: 1 / -1;
-}
-
-.contractPreview {
-  margin-top: 0;
 }
 
 .contractPreviewError {
@@ -173,6 +173,21 @@
   filter: none;
 }
 
+.previewOpenButton {
+  border: none;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 999px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.previewOpenButton:hover {
+  background: color-mix(in srgb, var(--primary) 90%, black);
+}
+
 .signatureActions {
   display: flex;
   gap: 0.75rem;
@@ -199,9 +214,17 @@
 .field select {
   padding: 0.75rem 1rem;
   border-radius: 0.85rem;
-  border: 1px solid color-mix(in srgb, var(--outline) 60%, transparent);
-  background: color-mix(in srgb, var(--surface) 98%, transparent);
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
   font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
 .fieldHidden {
@@ -215,22 +238,52 @@
 }
 
 .primaryButton,
-.secondaryButton {
+.secondaryButton,
+.outlineButton {
   border-radius: 999px;
   padding: 0.75rem 1.6rem;
   font-weight: 600;
   cursor: pointer;
   border: none;
+  transition: all 0.2s ease;
 }
 
 .primaryButton {
-  background: linear-gradient(120deg, var(--primary), #4338ca);
+  background: var(--primary);
   color: var(--primary-foreground);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.primaryButton:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--primary) 90%, black);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.primaryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.outlineButton {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.outlineButton:hover {
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .secondaryButton {
   background: color-mix(in srgb, var(--surface) 95%, transparent);
   border: 1px solid color-mix(in srgb, var(--outline) 70%, transparent);
+  color: var(--foreground);
+}
+
+.secondaryButton:hover {
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
 }
 
 .error {
@@ -254,21 +307,6 @@
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1rem;
-}
-
-.previewOpenButton {
-  border: none;
-  background: linear-gradient(120deg, var(--primary), #4338ca);
-  color: var(--primary-foreground);
-  border-radius: 999px;
-  padding: 0.5rem 1.25rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: filter 0.2s ease;
-}
-
-.previewOpenButton:hover {
-  filter: brightness(1.05);
 }
 
 .previewHint {
@@ -309,7 +347,6 @@
 .previewDocument p {
   margin: 0 0 1rem;
 }
-
 
 .signatureDesignerCallout {
   display: flex;
@@ -706,20 +743,20 @@
   border-collapse: collapse;
 }
 
-.previewDocument :global(.docx table td),
-.previewDocument :global(.docx table th) {
+.designerPreviewDocument :global(.docx table td),
+.designerPreviewDocument :global(.docx table th) {
   border: 1px solid #d1d5db;
   padding: 0.5rem;
 }
 
-.previewDocument :global(.docx h1),
-.previewDocument :global(.docx h2),
-.previewDocument :global(.docx h3),
-.previewDocument :global(.docx h4) {
+.designerPreviewDocument :global(.docx h1),
+.designerPreviewDocument :global(.docx h2),
+.designerPreviewDocument :global(.docx h3),
+.designerPreviewDocument :global(.docx h4) {
   text-align: center !important;
 }
 
-.previewDocument :global(.crm-highlighted-value) {
+.designerPreviewDocument :global(.crm-highlighted-value) {
   color: #b91c1c;
   font-weight: 700;
   background: rgba(239, 68, 68, 0.12);
@@ -730,7 +767,7 @@
   gap: 0.25rem;
 }
 
-.previewDocument :global(.crm-highlighted-value--missing) {
+.designerPreviewDocument :global(.crm-highlighted-value--missing) {
   background: rgba(239, 68, 68, 0.08);
   border: 1px dashed rgba(239, 68, 68, 0.5);
 }

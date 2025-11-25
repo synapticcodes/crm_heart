@@ -25,7 +25,7 @@ async function bootstrap() {
 
   const port = Number(process.env.PORT ?? 3333)
   await app.listen(port)
-  Logger.log(`🚀 Backend CRM Heart rodando na porta ${port}`, 'Bootstrap')
+  Logger.log(`🚀 Backend Meu Nome Ok rodando na porta ${port}`, 'Bootstrap')
 }
 
 void bootstrap()

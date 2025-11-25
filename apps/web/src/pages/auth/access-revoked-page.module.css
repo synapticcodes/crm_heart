@@ -46,14 +46,15 @@
   margin-top: 1.5rem;
   padding: 0.85rem 1.5rem;
   border-radius: 0.75rem;
-  background: #f97316;
-  color: #ffffff;
+  background: var(--primary);
+  color: var(--primary-foreground);
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .link:hover {
-  background: #ea580c;
+  background: color-mix(in srgb, var(--primary) 90%, black);
+  transform: translateY(-1px);
 }
