@@ -30,7 +30,7 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 1.25rem;
   padding: 0.5rem;
   border-radius: 1rem;
   background: color-mix(in srgb, var(--surface) 92%, transparent);

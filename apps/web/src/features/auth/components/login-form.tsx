@@ -45,7 +45,7 @@ export const LoginForm = () => {
           name="email"
           type="email"
           autoComplete="email"
-          placeholder="seuemail@empresa.com"
+          placeholder="seuemail@meunomeok.com"
           className={styles.input}
           value={email}
           onChange={(event) => {

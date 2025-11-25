@@ -16,6 +16,40 @@
   gap: 0.75rem;
 }
 
+.uploadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  border: 1px solid transparent;
+}
+
+.uploadButton:hover {
+  background-color: color-mix(in srgb, var(--primary) 90%, black);
+  transform: translateY(-1px);
+}
+
+.uploadButton:active {
+  transform: translateY(0);
+}
+
+.uploadButtonDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.hiddenInput {
+  display: none;
+}
+
 .status {
   font-size: 0.85rem;
   color: var(--muted-foreground);
@@ -68,4 +102,3 @@
 .removeButton:hover {
   text-decoration: underline;
 }
-

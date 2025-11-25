@@ -66,19 +66,19 @@
 .field input {
   appearance: none;
   width: 100%;
-  border-radius: 0.65rem;
-  border: 1px solid color-mix(in srgb, var(--outline) 65%, transparent);
-  padding: 0.65rem 0.75rem;
+  border-radius: 0.85rem;
+  border: 1px solid #cbd5e1;
+  padding: 0.75rem 1rem;
   font-size: 0.95rem;
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  background: #ffffff;
   color: var(--foreground);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .field input:focus {
   outline: none;
-  border-color: color-mix(in srgb, var(--primary) 75%, transparent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
 .footer {

@@ -444,16 +444,13 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
   const [previewContent, setPreviewContent] = useState<{ raw: string; html: string } | null>(null)
   const [previewTitle, setPreviewTitle] = useState<string | null>(null)
   const [previewError, setPreviewError] = useState<string | null>(null)
-  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false)
   const [isDesignerOpen, setIsDesignerOpen] = useState(false)
   const [isSendingContract, setIsSendingContract] = useState(false)
-  const [isPreviewLoading, setIsPreviewLoading] = useState(false)
   const [contractStatus, setContractStatus] = useState<string | null>(null)
   const [contractRejectionReason, setContractRejectionReason] = useState<string | null>(null)
   const [signers, setSigners] = useState<SignerFormEntry[]>([])
   const [signersOrdered, setSignersOrdered] = useState(false)
   const [activeSignerId, setActiveSignerId] = useState<string | null>(null)
-  const hasPreview = Boolean(previewContent?.html)
   const legacyShareLinksRef = useRef<Record<string, string>>({})
   // Legacy no-op setter kept so cached bundles referencing setShareLinksBySigner don't crash.
   const setShareLinksBySigner = useCallback(
@@ -610,7 +607,6 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
           previewTitle?: string | null
           contractStatus?: string | null
           contractRejectionReason?: string | null
-          isPreviewModalOpen?: boolean
           signers?: Array<{
             id?: string
             name?: string
@@ -651,7 +647,6 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
         setPreviewError(null)
         setContractStatus(parsed.contractStatus ?? null)
         setContractRejectionReason(parsed.contractRejectionReason ?? null)
-        setIsPreviewModalOpen(false)
 
         if ('shareLinksBySigner' in parsed) {
           delete (parsed as { shareLinksBySigner?: unknown }).shareLinksBySigner
@@ -702,7 +697,6 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
       setPreviewError(null)
       setContractStatus(null)
       setContractRejectionReason(null)
-      setIsPreviewModalOpen(false)
       const fallbackSigner = createSignerFromDeal(deal)
       setSigners([fallbackSigner])
       setActiveSignerId(fallbackSigner.id)
@@ -757,7 +751,6 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
         } else {
           setPreviewContent(null)
         }
-        setIsPreviewModalOpen(false)
         setPreviewTitle((contract.contrato_nome as string | null) ?? null)
       } else {
         setContractRejectionReason(null)
@@ -779,7 +772,6 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
       previewTitle,
       contractStatus,
       contractRejectionReason,
-      isPreviewModalOpen,
       signers: signers.map((signer) => ({
         id: signer.id,
         name: signer.name,
@@ -807,7 +799,6 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
     previewTitle,
   contractStatus,
   contractRejectionReason,
-  isPreviewModalOpen,
     signers,
     signersOrdered,
     activeSignerId,
@@ -1140,7 +1131,7 @@ const participantCounts = useMemo(() => {
     }
 
     if (!previewContent?.html) {
-      const generated = await handleGeneratePreview({ openPreview: false })
+      const generated = await handleGeneratePreview()
       if (!generated) return
     }
 
@@ -1151,7 +1142,6 @@ const participantCounts = useMemo(() => {
     }
 
     setIsDesignerOpen(true)
-    setIsPreviewModalOpen(false)
     requestAnimationFrame(() => {
       recomputePageRects()
     })
@@ -1710,7 +1700,7 @@ const participantCounts = useMemo(() => {
         if (error instanceof Error && error.message === CONTRACT_PREVIEW_UNAUTHORIZED_ERROR) {
           throw error
         }
-        console.warn('Falha ao gerar pré-visualização DOCX', error)
+        console.warn('Falha ao gerar conteúdo DOCX para o contrato', error)
         return null
       }
     },
@@ -1718,20 +1708,18 @@ const participantCounts = useMemo(() => {
   )
 
   const handleGeneratePreview = useCallback(
-    async (options?: { openPreview?: boolean }): Promise<{ raw: string; html: string } | null> => {
+    async (): Promise<{ raw: string; html: string } | null> => {
       const template = templates.find((item) => item.id === selectedTemplateId)
 
       if (!template) {
         setPreviewError('Selecione um template para gerar o contrato.')
         return null
-    }
+      }
 
-    if (!template.template_body && !template.storage_path) {
-      setPreviewError('O template selecionado não possui conteúdo de pré-visualização.')
-      return null
-    }
-
-    setIsPreviewLoading(true)
+      if (!template.template_body && !template.storage_path) {
+        setPreviewError('O template selecionado não possui conteúdo para gerar o contrato.')
+        return null
+      }
 
     try {
       const { docxData, highlightValues } = resolveTemplateVariables(template)
@@ -1760,27 +1748,22 @@ const participantCounts = useMemo(() => {
       if (!html) {
         setPreviewContent(null)
         setPreviewTitle(template.nome)
-        setPreviewError('Não encontramos conteúdo para gerar a pré-visualização.')
+        setPreviewError('Não encontramos conteúdo para gerar o contrato.')
         return null
       }
 
       setPreviewTitle(template.nome)
       setPreviewContent({ raw: previewRaw, html })
       setPreviewError(null)
-      if (options?.openPreview) {
-        setIsPreviewModalOpen(true)
-      }
       return { raw: previewRaw, html }
     } catch (error) {
       if (error instanceof Error && error.message === CONTRACT_PREVIEW_UNAUTHORIZED_ERROR) {
         setPreviewError('Sua sessão expirou. Faça login novamente.')
       } else {
         console.error(error)
-        setPreviewError('Não foi possível gerar a pré-visualização do contrato.')
+        setPreviewError('Não foi possível gerar o contrato.')
       }
       return null
-    } finally {
-      setIsPreviewLoading(false)
     }
   }, [
     applyHighlightsToHtml,
@@ -1791,12 +1774,6 @@ const participantCounts = useMemo(() => {
     selectedTemplateId,
     templates,
   ])
-
-  useEffect(() => {
-    if (!previewContent?.html) {
-      setIsPreviewModalOpen(false)
-    }
-  }, [previewContent])
 
   const handleSendContract = async () => {
     if (!selectedTemplateId) {
@@ -1818,9 +1795,9 @@ const participantCounts = useMemo(() => {
 
     let currentPreview = previewContent
     if (!currentPreview?.html) {
-      const generated = await handleGeneratePreview({ openPreview: false })
+      const generated = await handleGeneratePreview()
       if (!generated) {
-        setPreviewError('Gere a pré-visualização do contrato antes de enviar ao Autentique.')
+        setPreviewError('Não foi possível preparar o contrato para envio.')
         return
       }
       currentPreview = generated
@@ -1891,7 +1868,6 @@ const participantCounts = useMemo(() => {
 
     let previewRawForStorage = currentPreview?.raw ?? null
     let previewTitleForStorage = previewTitle ?? template.nome
-    let previewModalForStorage = isPreviewModalOpen
     let persistedFormSnapshot: Partial<DealRecord> | null = null
 
     try {
@@ -1967,8 +1943,6 @@ const participantCounts = useMemo(() => {
         } else {
           setPreviewContent(null)
           previewRawForStorage = null
-          setIsPreviewModalOpen(false)
-          previewModalForStorage = false
         }
       }
 
@@ -1984,7 +1958,6 @@ const participantCounts = useMemo(() => {
             previewContent: previewRawForStorage,
             previewTitle: previewTitleForStorage,
             contractStatus: 'contrato_enviado',
-            isPreviewModalOpen: previewModalForStorage,
             signers: signers.map((signerItem) => ({
               id: signerItem.id,
               name: signerItem.name,
@@ -2327,64 +2300,28 @@ const participantCounts = useMemo(() => {
                   disabled={templatesLoading || templates.length === 0}
                 >
                   <option value="">Selecione um template</option>
-                  {templates.map((template) => (
-                    <option key={template.id} value={template.id}>
-                      {template.nome}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              {templates.map((template) => (
+                <option key={template.id} value={template.id}>
+                  {template.nome}
+                </option>
+              ))}
+            </select>
+          </label>
 
-              <div className={`${styles.previewBox} ${styles.contractPreview}`}>
-                <header className={styles.previewHeader}>
-                  <div>
-                    <span className={styles.previewLabel}>Pré-visualização</span>
-                    <h4 className={styles.previewTitle}>
-                      {hasPreview ? previewTitle ?? 'Contrato' : 'Nenhuma pré-visualização disponível'}
-                    </h4>
-                  </div>
-                  <div className={styles.previewActions}>
-                    <button
-                      type="button"
-                      className={styles.previewGenerateButton}
-                      onClick={() => {
-                        void handleGeneratePreview()
-                      }}
-                      disabled={isPreviewLoading}
-                    >
-                      {isPreviewLoading ? 'Gerando...' : 'Gerar pré-visualização'}
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.previewOpenButton}
-                      onClick={() => setIsPreviewModalOpen(true)}
-                      disabled={!hasPreview}
-                    >
-                      Abrir pré-visualização
-                    </button>
-                  </div>
-                </header>
-                <p className={styles.previewHint}>
-                  {hasPreview
-                    ? 'Visualize o contrato preenchido em uma janela dedicada.'
-                    : 'Gere uma pré-visualização para revisar o documento antes de enviar.'}
-                </p>
-              </div>
+          {previewError ? <p className={`${styles.error} ${styles.contractPreviewError}`}>{previewError}</p> : null}
 
-              {previewError ? <p className={`${styles.error} ${styles.contractPreviewError}`}>{previewError}</p> : null}
-
-              <div className={`${styles.signatureDesignerCallout} ${styles.contractCallout}`}>
-                <div>
-                  <span className={styles.previewLabel}>Configuração de assinaturas</span>
+          <div className={`${styles.signatureDesignerCallout} ${styles.contractCallout}`}>
+            <div>
+              <span className={styles.previewLabel}>Configuração de assinaturas</span>
                   <p className={styles.previewHint}>
-                    Defina signatários, testemunhas, métodos de envio e campos diretamente na pré-visualização do documento.
+                    Defina signatários, testemunhas, métodos de envio e campos diretamente no documento.
                   </p>
                   <p className={styles.previewHint}>
                     Signatários: {participantCounts.signerTotal} · Testemunhas: {participantCounts.witnessTotal}
                   </p>
                 </div>
                 <div className={styles.signatureActions}>
-                  <button type="button" className={styles.secondaryButton} onClick={handleOpenDesigner}>
+                  <button type="button" className={styles.outlineButton} onClick={handleOpenDesigner}>
                     Configurar assinaturas
                   </button>
                   <button
@@ -2581,37 +2518,6 @@ const participantCounts = useMemo(() => {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-      ) : null}
-      {previewContent?.html && isPreviewModalOpen ? (
-        <div
-          className={styles.previewModalBackdrop}
-          role="dialog"
-          aria-modal="true"
-          aria-label={previewTitle ?? 'Pré-visualização do contrato'}
-          onClick={() => setIsPreviewModalOpen(false)}
-        >
-          <div
-            className={styles.previewModal}
-            onClick={(event) => {
-              event.stopPropagation()
-            }}
-          >
-            <header className={styles.previewModalHeader}>
-              <div>
-                <span className={styles.previewLabel}>Pré-visualização</span>
-                <h4 className={styles.previewTitle}>{previewTitle ?? 'Contrato'}</h4>
-              </div>
-              <button
-                type="button"
-                className={styles.previewCloseButton}
-                onClick={() => setIsPreviewModalOpen(false)}
-              >
-                Fechar
-              </button>
-            </header>
-            <div className={styles.previewDocument} dangerouslySetInnerHTML={{ __html: previewContent.html }} />
           </div>
         </div>
       ) : null}

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Upload } from 'lucide-react'
 
 import { supabase } from '@/lib/supabase-client'
 import type { ContractTemplate, ContractTemplateVariable, VariableOption } from '@/features/contracts/types'
@@ -307,7 +308,17 @@ export const ContractTemplateFormModal = ({
 
           <label className={styles.field}>
             <span>Arquivo (DOCX/PDF)</span>
-            <input type="file" accept=".doc,.docx,.pdf" onChange={handleFileUpload} disabled={uploading} />
+            <label className={`${styles.uploadButton} ${uploading ? styles.uploadButtonDisabled : ''}`}>
+              <Upload size={16} />
+              {uploading ? 'Enviando...' : 'Escolher arquivo'}
+              <input 
+                type="file" 
+                accept=".doc,.docx,.pdf" 
+                onChange={handleFileUpload} 
+                disabled={uploading} 
+                className={styles.hiddenInput}
+              />
+            </label>
             {storagePath ? (
               <span className={styles.helper}>
                 Arquivo atual: {uploadedFileName ?? deriveFileNameFromPath(storagePath)}

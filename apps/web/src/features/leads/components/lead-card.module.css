@@ -53,8 +53,9 @@
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
-  background: color-mix(in srgb, var(--primary) 15%, #2563eb);
-  color: #0f172a;
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
 }
 
 .createdAt {
@@ -102,6 +103,9 @@
   border: 1px solid color-mix(in srgb, #ef4444 35%, transparent);
   color: #991b1b;
   font-size: 0.85rem;
+  display: flex;
+  gap: 0.35rem;
+  align-items: baseline;
 }
 
 .highlight {
