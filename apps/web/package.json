@@ -15,6 +15,7 @@
     "@hello-pangea/dnd": "^16.3.0",
     "@supabase/supabase-js": "^2.49.2",
     "clsx": "^2.1.1",
+    "lucide-react": "^0.554.0",
     "date-fns": "^3.6.0",
     "date-fns-tz": "^3.2.0",
     "docx-preview": "^0.3.7",

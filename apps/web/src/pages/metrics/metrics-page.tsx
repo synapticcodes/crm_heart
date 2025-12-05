@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR'
+import { ptBR } from 'date-fns/locale'
 import { useEffect, useMemo, useState } from 'react'
 
 import { MetricCard } from '@/components/metric-card'
@@ -88,7 +88,9 @@ export const MetricsPage = () => {
     ? format(lastUpdated, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })
     : '—'
 
-  const personalRow = !isAdmin ? rows[0] : null
+  // Reserved for future non-admin view
+  const _personalRow = !isAdmin ? rows[0] : null
+  void _personalRow
 
   return (
     <section className={styles.section}>

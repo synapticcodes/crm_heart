@@ -1,5 +1,4 @@
-import { Menu, LogOut, ChevronDown, User } from 'lucide-react'
-import clsx from 'clsx'
+import { Menu, LogOut } from 'lucide-react'
 
 import { useAuth } from '@/features/auth/hooks/use-auth'
 
@@ -22,7 +21,6 @@ export const Topbar = ({ onMenuClick }: TopbarProps) => {
 
   const userInitial = user?.email?.[0]?.toUpperCase() ?? '?'
   const userDisplayName = profile?.user_name?.trim() || user?.email || 'Usuário'
-  const userEmail = user?.email ?? 'Usuário não autenticado'
   const userRole = profile?.role ?? 'Visitante'
 
   return (
