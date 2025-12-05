@@ -277,28 +277,47 @@ export const LeadsPage = () => {
     setIsLoadingSellers(true)
     setTransferError(null)
 
-    heartSupabase
-      .from('crm_user_profiles')
-      .select('id, user_id, user_name, user_email, role, status')
-      .eq('company_id', transferModalLead.company_id)
-      .eq('role', 'vendedor')
-      .not('status', 'eq', 'removed')
-      .order('user_name', { ascending: true, nullsFirst: false })
-      .then(({ data, error }) => {
+    const loadSellers = async () => {
+      try {
+        const { data, error } = await heartSupabase
+          .from('crm_user_profiles')
+          .select('id, user_id, user_name, user_email, role, status')
+          .eq('company_id', transferModalLead.company_id)
+          .eq('role', 'vendedor')
+          .not('status', 'eq', 'removed')
+          .order('user_name', { ascending: true, nullsFirst: false })
+
         if (!isMounted) return
+
         if (error) {
           console.error('Failed to load assignable sellers', error)
           setAssignableSellers([])
           setTransferError('Não foi possível carregar os vendedores disponíveis.')
           return
         }
-        setAssignableSellers(data ?? [])
-      })
-      .finally(() => {
+
+        const mapped: TeamMember[] = (data ?? []).map((row) => ({
+          id: row.id,
+          user_id: row.user_id,
+          user_name: row.user_name,
+          user_email: row.user_email ?? '',
+          role: row.role,
+          status: row.status,
+          metadata: null,
+          last_session: null,
+          last_activity: null,
+          created_at: null,
+          updated_at: null,
+        }))
+        setAssignableSellers(mapped)
+      } finally {
         if (isMounted) {
           setIsLoadingSellers(false)
         }
-      })
+      }
+    }
+
+    void loadSellers()
 
     return () => {
       isMounted = false

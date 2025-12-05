@@ -660,8 +660,8 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
             phone: signer.phone ?? '',
             cpf: signer.cpf ?? '',
             deliveryMethod: signer.deliveryMethod ?? 'email',
-            role: signer.role === 'WITNESS' ? 'WITNESS' : 'SIGNER',
-            fields: [],
+            role: (signer.role === 'WITNESS' ? 'WITNESS' : 'SIGNER') as SignerRole,
+            fields: [] as SignerField[],
           }))
 
           setSigners(restoredSigners)
@@ -827,29 +827,35 @@ export const DealDrawer = ({ deal, open, onClose, onSave }: DealDrawerProps) => 
     let active = true
     setIsLoadingCities(true)
 
-    heartSupabase
-      .from('cidades')
-      .select('nome')
-      .eq('estado', form.deal_estado)
-      .order('nome')
-      .then(({ data, error: fetchError }) => {
+    const loadCities = async () => {
+      try {
+        const { data, error: fetchError } = await heartSupabase
+          .from('cidades')
+          .select('nome')
+          .eq('estado', form.deal_estado)
+          .order('nome')
+
         if (!active) return
+
         if (fetchError) {
           console.error('Failed to load cities', fetchError)
           setCityOptions([])
           return
         }
+
         const names = (data ?? []).map((city) => city.nome as string)
         setCityOptions(names)
         if (form.deal_cidade && !names.includes(form.deal_cidade)) {
           setForm((prev) => ({ ...prev, deal_cidade: null }))
         }
-      })
-      .finally(() => {
+      } finally {
         if (active) {
           setIsLoadingCities(false)
         }
-      })
+      }
+    }
+
+    void loadCities()
 
     return () => {
       active = false
@@ -1275,7 +1281,7 @@ const participantCounts = useMemo(() => {
         ? parseCurrency(rawValue as string | number | null | undefined)
         : null
     const normalizedStatus: DealRecord['deal_status'] =
-      contractStatus ??
+      (contractStatus as DealRecord['deal_status'] | null | undefined) ??
       (normalizedForm.deal_status as DealRecord['deal_status'] | null | undefined) ??
       (deal.deal_status as DealRecord['deal_status'] | null | undefined) ??
       'negocio_novo'
@@ -1362,7 +1368,7 @@ const participantCounts = useMemo(() => {
     try {
       const highlightedByMarkers = new Set<string>()
       let markersReplaced = false
-      const initialHtml = html.replace(MARKER_REGEX, (match, encodedKey, markerContent) => {
+      const initialHtml = html.replace(MARKER_REGEX, (_match, encodedKey, markerContent) => {
         let key = String(encodedKey)
         try {
           key = decodeURIComponent(String(encodedKey))
@@ -1866,8 +1872,8 @@ const participantCounts = useMemo(() => {
     setIsSendingContract(true)
     setPreviewError(null)
 
-    let previewRawForStorage = currentPreview?.raw ?? null
-    let previewTitleForStorage = previewTitle ?? template.nome
+    let previewRawForStorage: string | null = currentPreview?.raw ?? null
+    let previewTitleForStorage: string | null = previewTitle ?? template.nome
     let persistedFormSnapshot: Partial<DealRecord> | null = null
 
     try {
@@ -2391,14 +2397,14 @@ const participantCounts = useMemo(() => {
                 {signers.map((signer) => {
                   const meta = participantMetadata.get(signer.id)
                   const displayLabel = meta?.displayLabel ?? 'Participante'
-                  const colorVars: CSSProperties | undefined = meta?.color
-                    ? {
+                  const colorVars = meta?.color
+                    ? ({
                         '--participant-border': meta.color.border,
                         '--participant-background': meta.color.background,
                         '--participant-badge-bg': meta.color.badgeBackground,
                         '--participant-badge-color': meta.color.badgeColor,
                         '--participant-shadow': meta.color.shadow,
-                      }
+                      } as CSSProperties)
                     : undefined
                   const isWitness = signer.role === 'WITNESS'
 

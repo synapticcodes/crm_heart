@@ -273,12 +273,25 @@ export const ActivityTracker = () => {
       ).catch(() => null)
     }
 
+    const handleBeforeUnload = () => {
+      if (activityTrackerGloballyDisabled || !accessTokenRef.current) {
+        return
+      }
+
+      void invokeActivity(
+        'logout',
+        accessTokenRef.current,
+        { reason: 'page_unload' },
+        { keepalive: true },
+      ).catch(() => null)
+    }
+
     window.addEventListener('pagehide', handlePageHide)
-    window.addEventListener('beforeunload', handlePageHide)
+    window.addEventListener('beforeunload', handleBeforeUnload)
 
     return () => {
       window.removeEventListener('pagehide', handlePageHide)
-      window.removeEventListener('beforeunload', handlePageHide)
+      window.removeEventListener('beforeunload', handleBeforeUnload)
     }
   }, [invokeActivity])
 

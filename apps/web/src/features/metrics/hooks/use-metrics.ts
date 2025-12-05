@@ -48,6 +48,7 @@ const periodViewMap: Record<MetricsPeriod, string> = {
   esta_semana: 'metricas_semana',
   este_mes: 'metricas_mes',
   todo_periodo: 'metricas_todo_periodo',
+  personalizado: 'metricas_todo_periodo', // Not used - personalizado uses RPC
 }
 
 const defaultSummary: MetricsSummary = {

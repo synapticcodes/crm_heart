@@ -38,7 +38,7 @@ export class ProfileService {
     for (const schema of this.schemaPriority) {
       const { data, error, status } = await this.supabase
         .schema(schema)
-        .from<TeamMemberRow>(this.tableName)
+        .from(this.tableName)
         .select(this.selectColumns)
         .or(`id.eq.${userId},user_id.eq.${userId}`)
         .maybeSingle()
@@ -55,7 +55,7 @@ export class ProfileService {
       }
 
       if (data) {
-        return { ...data, schema }
+        return { ...(data as TeamMemberRow), schema }
       }
     }
 

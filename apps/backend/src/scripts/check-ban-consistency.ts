@@ -28,10 +28,10 @@ const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
   },
 })
 
-const fetchTeamMembers = async (statusFilter: 'removed' | 'active') => {
+const fetchTeamMembers = async (statusFilter: 'removed' | 'active'): Promise<TeamMember[]> => {
   const query = supabase
     .schema(heartSchema)
-    .from<TeamMember>('equipe')
+    .from('equipe')
     .select('id, user_id, status, metadata', { count: 'exact' })
 
   const { data, error } =
@@ -43,7 +43,7 @@ const fetchTeamMembers = async (statusFilter: 'removed' | 'active') => {
     throw error
   }
 
-  return data ?? []
+  return (data as TeamMember[] | null) ?? []
 }
 
 const fetchDisabledUsers = async () => {

@@ -475,10 +475,7 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
     (result.status === undefined && (Boolean(result.data) || resultHasContent))
 
   const hasPayloadContent = searchSources.some((source) => {
-    if (Array.isArray(source)) return source.length > 0
-    if (source && typeof source === 'object') return Object.keys(source).length > 0
-    if (typeof source === 'string') return source.trim().length > 0
-    return Boolean(source)
+    return source && Object.keys(source).length > 0
   })
 
   const hasData = isPositiveStatus && (hasPayloadContent || Boolean(result))
@@ -600,7 +597,8 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
     parseNumericString(pickValue([['csb8']])) ??
     96
 
-  const creditOfferStatusCandidate = toString(
+  // Reserved for future credit offer status display
+  const _creditOfferStatusCandidate = toString(
     pickValue(
       [
         ['oferta_credito', 'status'],
@@ -615,6 +613,7 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
     ),
     'Negada',
   )
+  void _creditOfferStatusCandidate
 
   const creditOfferLevel =
     toString(
@@ -920,8 +919,11 @@ const buildReportData = (result: CpfConsultationResult): ReportData => {
   const finalCpf = finalCpfRaw !== '—' ? toCpf(finalCpfRaw) : '—'
   const finalAge = age !== '—' ? age : derivedAge
 
-  const riskLabel = situationLabelCandidate || 'Situação financeira crítica'
-  const riskLevel = 5
+  // Reserved for future risk display
+  const _riskLabel = situationLabelCandidate || 'Situação financeira crítica'
+  const _riskLevel = 5
+  void _riskLabel
+  void _riskLevel
 
   const prognosisTimeFormatted = (() => {
     if (prognosisTime !== null) return formatDays(prognosisTime)
